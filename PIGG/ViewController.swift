@@ -12,11 +12,19 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var die1: UIImageView!
     @IBOutlet weak var die2: UIImageView!
-    @IBOutlet weak var player2Score: UILabel!
+    @IBOutlet weak var upsideDownPlayer2Score: UILabel!
     @IBOutlet weak var player1Score: UILabel!
     @IBOutlet weak var playerLabel: UILabel!
+    @IBOutlet weak var upsideDownPlayerLable: UILabel!
     @IBOutlet weak var runPointsLabel: UILabel!
     @IBOutlet weak var resetButton: UIButton!
+    @IBOutlet weak var upsideDownResetButton: UIButton!
+    @IBOutlet weak var upsideDownRulesButton: UIButton!
+    @IBOutlet weak var upsideDownRoll: UIButton!
+    @IBOutlet weak var upsideDownPass: UIButton!
+    @IBOutlet weak var upsideDownPlayer2Label: UILabel!
+    @IBOutlet weak var passButton: UIButton!
+    @IBOutlet weak var rollButton: UIButton!
     
     var isContinuing : Bool = false
     
@@ -42,6 +50,20 @@ class ViewController: UIViewController {
         updatePlayerTurnLabel()
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in}))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in}))
+        upsideDownPass.transform =  CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        upsideDownRoll.transform =  CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        upsideDownPlayerLable.transform = CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        upsideDownResetButton.transform = CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        upsideDownRulesButton.transform = CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        upsideDownPlayer2Label.transform = CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        upsideDownPlayer2Score.transform = CGAffineTransform.init(rotationAngle: CGFloat(Float.pi))
+        
+        rollButton.setTitleColor(UIColor.gray, for: .disabled)
+        passButton.setTitleColor(UIColor.gray, for: .disabled)
+        upsideDownRoll.setTitleColor(UIColor.gray, for: .disabled)
+        upsideDownPass.setTitleColor(UIColor.gray, for: .disabled)
+        
+        ChangeButtonState()
     }
 
     @IBAction func RollDice(_ sender: Any) {
@@ -83,7 +105,7 @@ class ViewController: UIViewController {
     
     func updatePlayerScores() {
         player1Score.text = "\(playersScore[0])"
-        player2Score.text = "\(playersScore[1])"
+        upsideDownPlayer2Score.text = "\(playersScore[1])"
     }
     
     func endTurn() {
@@ -94,6 +116,7 @@ class ViewController: UIViewController {
         runValue = 0
         isPlayer1Turn = !isPlayer1Turn
         updatePlayerTurnLabel()
+        ChangeButtonState()
         runPointsLabel.text = "+\(runValue)"
         playerHasRolled = false
         
@@ -156,12 +179,28 @@ class ViewController: UIViewController {
         die2.image = UIImage(named: dieArray[die2Value])
     }
     
+    func ChangeButtonState() {
+        if (isPlayer1Turn) {
+            upsideDownRoll.isEnabled = false
+            upsideDownPass.isEnabled = false
+            rollButton.isEnabled = true
+            passButton.isEnabled = true
+        } else {
+            rollButton.isEnabled = false
+            passButton.isEnabled = false
+            upsideDownRoll.isEnabled = true
+            upsideDownPass.isEnabled = true
+        }
+        
+    }
+    
     func updatePlayerTurnLabel() {
         if (isPlayer1Turn) {
             playerLabel.text = "Player1's turn"
         } else {
             playerLabel.text = "Player2's turn"
         }
+        upsideDownPlayerLable.text = playerLabel.text
     }
     @IBAction func ShowRules(_ sender: Any) {
         self.present(alert, animated: true)
